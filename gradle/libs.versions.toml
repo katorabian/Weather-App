@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.1"
+decompose = "3.3.0"
 kotlin = "2.1.0"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -29,6 +30,8 @@ mvikotlin-core = { group = "com.arkivanov.mvikotlin", name = "mvikotlin", versio
 mvikotlin-main = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-main", version.ref = "mvikotlin" }
 mvikotlin-coroutines = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-coroutines", version.ref = "mvikotlin" }
 mvikotlin-logging = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-logging", version.ref = "mvikotlin" }
+decompose-core = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
+decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-compose-jetpack", version.ref = "decompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

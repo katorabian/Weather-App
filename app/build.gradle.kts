@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.mvikotlin.main)
     implementation(libs.mvikotlin.coroutines)
     implementation(libs.mvikotlin.logging)
+    implementation(libs.decompose.core)
+    implementation(libs.decompose.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
