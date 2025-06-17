@@ -53,15 +53,20 @@ android {
 
 dependencies {
 
+    // Mvi kotlin
     implementation(libs.mvikotlin.core)
     implementation(libs.mvikotlin.main)
     implementation(libs.mvikotlin.coroutines)
     implementation(libs.mvikotlin.logging)
+    // Decompose
     implementation(libs.decompose.core)
     implementation(libs.decompose.compose)
-
+    // Room
     implementation(libs.room.core)
     ksp(libs.room.compiler)
+    // Dagger
+    implementation(libs.dagger.core)
+    ksp(libs.dagger.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
