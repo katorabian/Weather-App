@@ -69,6 +69,9 @@ dependencies {
     ksp(libs.dagger.compiler)
     // Glide
     implementation(libs.glide.compose)
+    // Retrofit
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.gson)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
