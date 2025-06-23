@@ -18,26 +18,26 @@ import dagger.Provides
 @Module
 interface DataModule {
 
-    @Binds
+    @[ApplicationScope Binds]
     fun bindFavoriteRepo(impl: FavoriteRepositoryImpl): FavoriteRepository
 
-    @Binds
+    @[ApplicationScope Binds]
     fun bindWeatherRepo(impl: WeatherRepositoryImpl): WeatherRepository
 
-    @Binds
+    @[ApplicationScope Binds]
     fun bindSearchRepo(impl: SearchRepositoryImpl): SearchRepository
 
     companion object {
 
-        @Provides
+        @[ApplicationScope Provides]
         fun provideApiService(): ApiService = ApiFactory.apiService
 
-        @Provides
+        @[ApplicationScope Provides]
         fun provideFavoriteDatabase(context: Context): FavoriteDataBase {
             return FavoriteDataBase.getInstance(context)
         }
 
-        @Provides
+        @[ApplicationScope Provides]
         fun provideFavoriteCitiesDao(database: FavoriteDataBase): FavoriteCitiesDao {
             return database.favoriteCitiesDao()
         }
