@@ -1,4 +1,4 @@
-package com.katorabian.weatherapp.ui.theme
+package com.katorabian.weatherapp.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
