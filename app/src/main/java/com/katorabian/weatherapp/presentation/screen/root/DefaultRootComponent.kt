@@ -9,14 +9,16 @@ import com.katorabian.weatherapp.presentation.screen.details.DefaultDetailsCompo
 import com.katorabian.weatherapp.presentation.screen.favorite.DefaultFavoriteComponent
 import com.katorabian.weatherapp.presentation.screen.search.DefaultSearchComponent
 import com.katorabian.weatherapp.presentation.screen.search.OpenReason
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.parcelize.Parcelize
-import javax.inject.Inject
 
-class DefaultRootComponent @Inject constructor(
+class DefaultRootComponent @AssistedInject constructor(
     private val detailsComponentFactory: DefaultDetailsComponent.Factory,
     private val favoriteComponentFactory: DefaultFavoriteComponent.Factory,
     private val searchComponentFactory: DefaultSearchComponent.Factory,
-    componentContext: ComponentContext
+    @Assisted componentContext: ComponentContext
 ) : RootComponent, ComponentContext by componentContext {
 
     override val stack: Value<ChildStack<*, RootComponent.Child>>
@@ -66,5 +68,13 @@ class DefaultRootComponent @Inject constructor(
 
         @Parcelize
         data class Details(val city: City): Config
+    }
+
+    @AssistedFactory
+    interface Factory {
+
+        fun create(
+            @Assisted componentContext: ComponentContext
+        ): DefaultRootComponent
     }
 }
