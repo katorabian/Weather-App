@@ -6,6 +6,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.katorabian.weatherapp.domain.entity.City
 import com.katorabian.weatherapp.presentation.extensions.lazyComponentScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -13,12 +16,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class DefaultFavoriteComponent @Inject constructor(
+class DefaultFavoriteComponent @AssistedInject constructor(
     private val favoriteStoreFactory: FavoriteStoreFactory,
-    private val onCityItemClick: (City) -> Unit,
-    private val onAddToFavoriteClick: () -> Unit,
-    private val onSearchClick: () -> Unit,
-    componentContext: ComponentContext
+    @Assisted("onCityItemClick") private val onCityItemClick: (City) -> Unit,
+    @Assisted("onAddToFavoriteClick") private val onAddToFavoriteClick: () -> Unit,
+    @Assisted("onSearchClick") private val onSearchClick: () -> Unit,
+    @Assisted("componentContext") componentContext: ComponentContext
 ) : FavoriteComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore { favoriteStoreFactory.create() }
@@ -49,5 +52,15 @@ class DefaultFavoriteComponent @Inject constructor(
 
     override fun onClickCityItem(city: City) {
         store.accept(FavoriteStore.Intent.CityItemClick(city))
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("onCityItemClick") onCityItemClick: (City) -> Unit,
+            @Assisted("onAddToFavoriteClick") onAddToFavoriteClick: () -> Unit,
+            @Assisted("onSearchClick") onSearchClick: () -> Unit,
+            @Assisted("componentContext") componentContext: ComponentContext
+        ): DefaultFavoriteComponent
     }
 }
