@@ -3,6 +3,11 @@ package com.katorabian.weatherapp.presentation.screen.root
 import android.os.Parcelable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import com.katorabian.weatherapp.domain.entity.City
 import com.katorabian.weatherapp.presentation.screen.details.DefaultDetailsComponent
@@ -13,6 +18,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.serializerOrNull
 
 class DefaultRootComponent @AssistedInject constructor(
     private val detailsComponentFactory: DefaultDetailsComponent.Factory,
@@ -21,8 +28,16 @@ class DefaultRootComponent @AssistedInject constructor(
     @Assisted componentContext: ComponentContext
 ) : RootComponent, ComponentContext by componentContext {
 
-    override val stack: Value<ChildStack<*, RootComponent.Child>>
-        get() = TODO("Not yet implemented")
+    private val navigation = StackNavigation<Config>()
+
+    @OptIn(InternalSerializationApi::class)
+    override val stack: Value<ChildStack<*, RootComponent.Child>> = childStack(
+        source = navigation,
+        initialConfiguration = Config.Favorite,
+        handleBackButton = true,
+        childFactory = ::child,
+        serializer = Config::class.serializerOrNull()
+    )
 
     private fun child(
         config: Config,
@@ -32,16 +47,24 @@ class DefaultRootComponent @AssistedInject constructor(
             is Config.Details -> {
                 val component = detailsComponentFactory.create(
                     city = config.city,
-                    onBackClick = {},
+                    onBackClick = {
+                        navigation.pop()
+                    },
                     componentContext = componentContext
                 )
                 RootComponent.Child.Details(component)
             }
             Config.Favorite -> {
                 val component = favoriteComponentFactory.create(
-                    onCityItemClick = {},
-                    onAddToFavoriteClick = {},
-                    onSearchClick = {},
+                    onCityItemClick = {
+                        navigation.pushNew(Config.Details(it))
+                    },
+                    onAddToFavoriteClick = {
+                        navigation.pushNew(Config.Search(OpenReason.AddToFavorite))
+                    },
+                    onSearchClick = {
+                        navigation.pushNew(Config.Search(OpenReason.RegularSearch))
+                    },
                     componentContext = componentContext
                 )
                 RootComponent.Child.Favorite(component)
@@ -49,9 +72,15 @@ class DefaultRootComponent @AssistedInject constructor(
             is Config.Search -> {
                 val component = searchComponentFactory.create(
                     openReason = config.openReason,
-                    onBackClick = {},
-                    onSavedToFavorite = {},
-                    onForecastRequest = {},
+                    onBackClick = {
+                        navigation.pop()
+                    },
+                    onSavedToFavorite = {
+                        navigation.pop()
+                    },
+                    onForecastRequest = {
+                        navigation.pushNew(Config.Details(it))
+                    },
                     componentContext = componentContext
                 )
                 RootComponent.Child.Search(component)
