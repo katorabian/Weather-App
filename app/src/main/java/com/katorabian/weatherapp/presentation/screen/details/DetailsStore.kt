@@ -102,13 +102,13 @@ class DetailsStoreFactory @Inject constructor(
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent) {
+        override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 Intent.ClickBack -> {
                     publish(Label.ClickBack)
                 }
                 Intent.ClickChangeFavoriteStatus -> scope.launch {
-                    val state = state()
+                    val state = getState()
                     if (state.isFavorite) {
                         changeFavoriteStateUseCase.removeFrom(state.city.id)
                     } else {
@@ -118,7 +118,7 @@ class DetailsStoreFactory @Inject constructor(
             }
         }
 
-        override fun executeAction(action: Action) {
+        override fun executeAction(action: Action, getState: () -> State) {
             when (action) {
                 is Action.FavoriteStatusChanged -> {
                     dispatch(Msg.FavoriteStatusChanged(action.isFavorite))

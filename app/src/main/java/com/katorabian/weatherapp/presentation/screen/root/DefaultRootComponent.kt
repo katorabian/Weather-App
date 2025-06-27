@@ -6,7 +6,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.katorabian.weatherapp.domain.entity.City
 import com.katorabian.weatherapp.presentation.screen.details.DefaultDetailsComponent
@@ -17,8 +17,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.parcelize.Parcelize
-import kotlinx.serialization.InternalSerializationApi
-import kotlinx.serialization.serializerOrNull
 
 class DefaultRootComponent @AssistedInject constructor(
     private val detailsComponentFactory: DefaultDetailsComponent.Factory,
@@ -29,13 +27,11 @@ class DefaultRootComponent @AssistedInject constructor(
 
     private val navigation = StackNavigation<Config>()
 
-    @OptIn(InternalSerializationApi::class)
     override val stack: Value<ChildStack<*, RootComponent.Child>> = childStack(
         source = navigation,
         initialConfiguration = Config.Favorite,
         handleBackButton = true,
-        childFactory = ::child,
-        serializer = Config::class.serializerOrNull()
+        childFactory = ::child
     )
 
     private fun child(
@@ -56,13 +52,13 @@ class DefaultRootComponent @AssistedInject constructor(
             Config.Favorite -> {
                 val component = favoriteComponentFactory.create(
                     onCityItemClick = {
-                        navigation.pushNew(Config.Details(it))
+                        navigation.push(Config.Details(it))
                     },
                     onAddToFavoriteClick = {
-                        navigation.pushNew(Config.Search(OpenReason.AddToFavorite))
+                        navigation.push(Config.Search(OpenReason.AddToFavorite))
                     },
                     onSearchClick = {
-                        navigation.pushNew(Config.Search(OpenReason.RegularSearch))
+                        navigation.push(Config.Search(OpenReason.RegularSearch))
                     },
                     componentContext = componentContext
                 )
@@ -78,7 +74,7 @@ class DefaultRootComponent @AssistedInject constructor(
                         navigation.pop()
                     },
                     onForecastRequest = {
-                        navigation.pushNew(Config.Details(it))
+                        navigation.push(Config.Details(it))
                     },
                     componentContext = componentContext
                 )

@@ -100,7 +100,7 @@ class FavoriteStoreFactory @Inject constructor(
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
-        override fun executeIntent(intent: Intent) {
+        override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.CityItemClick -> {
                     publish(
@@ -116,7 +116,7 @@ class FavoriteStoreFactory @Inject constructor(
             }
         }
 
-        override fun executeAction(action: Action) {
+        override fun executeAction(action: Action, getState: () -> State) {
             when (action) {
                 is Action.FavoriteCitiesLoaded -> {
                     val cities = action.cities

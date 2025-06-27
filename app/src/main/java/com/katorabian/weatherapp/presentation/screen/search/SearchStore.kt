@@ -82,7 +82,7 @@ class SearchStoreFactory @Inject constructor(
     ) : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
         private var searchJob: Job? = null
 
-        override fun executeIntent(intent: Intent) {
+        override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
                 is Intent.ChangeSearchQuery -> {
                     dispatch(
@@ -108,7 +108,7 @@ class SearchStoreFactory @Inject constructor(
                     searchJob = scope.launch {
                         dispatch(Msg.SearchResultLoading)
                         try {
-                            val cities = searchCityUseCase.search(state().searchQuery)
+                            val cities = searchCityUseCase.search(getState().searchQuery)
                             dispatch(Msg.SearchResultLoaded(cities = cities))
                         } catch (e: Exception) {
                             dispatch(Msg.SearchResultError)
