@@ -1,5 +1,6 @@
 package com.katorabian.weatherapp.presentation.screen.favorite
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -18,8 +19,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.katorabian.weatherapp.presentation.ui.theme.CardGradients
+import com.katorabian.weatherapp.presentation.ui.theme.Gradient
 
 @Composable
 fun FavoriteContent(component: FavoriteComponent) {
@@ -33,17 +38,24 @@ fun FavoriteContent(component: FavoriteComponent) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(
+        itemsIndexed(
             items = state.cityItems,
-            key = { it.city.id }
-        ) {
-            CityCard(cityItem = it)
+            key = { _, item -> item.city.id }
+        ) { index, item ->
+            CityCard(
+                cityItem = item,
+                index = index
+            )
         }
     }
 }
 
 @Composable
-private fun CityCard(cityItem: FavoriteStore.State.CityItem) {
+private fun CityCard(
+    cityItem: FavoriteStore.State.CityItem,
+    index: Int
+) {
+    val gradient = getGradientByIndex(index)
     Card(
         modifier = Modifier.fillMaxSize(),
         colors = CardDefaults.cardColors(
@@ -53,8 +65,19 @@ private fun CityCard(cityItem: FavoriteStore.State.CityItem) {
     ) {
         Box(
             modifier = Modifier
+                .background(gradient.primaryGradient)
                 .fillMaxSize()
                 .sizeIn(minHeight = 196.dp)
+                .drawBehind {
+                    drawCircle(
+                        brush = gradient.secondaryGradient,
+                        center = Offset(
+                            x = center.x - size.width / 10,
+                            y = size.height
+                        ),
+                        radius = size.maxDimension / 2
+                    )
+                }
                 .padding(24.dp),
         ) {
             Text(
@@ -65,4 +88,8 @@ private fun CityCard(cityItem: FavoriteStore.State.CityItem) {
             )
         }
     }
+}
+
+private fun getGradientByIndex(index: Int): Gradient = CardGradients.gradients.run {
+    get(index % count())
 }
