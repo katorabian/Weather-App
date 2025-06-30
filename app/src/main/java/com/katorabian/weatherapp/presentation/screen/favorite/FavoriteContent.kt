@@ -2,6 +2,7 @@ package com.katorabian.weatherapp.presentation.screen.favorite
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,7 +62,9 @@ fun FavoriteContent(component: FavoriteComponent) {
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item(span = { GridItemSpan(2) }) {
-            SearchCard()
+            SearchCard(
+                onClick = { component.onClickSearch() }
+            )
         }
         itemsIndexed(
             items = state.cityItems,
@@ -69,11 +72,14 @@ fun FavoriteContent(component: FavoriteComponent) {
         ) { index, item ->
             CityCard(
                 cityItem = item,
-                index = index
+                index = index,
+                onClick = { component.onClickCityItem(item.city) }
             )
         }
         item {
-            AddFavoriteCityCard()
+            AddFavoriteCityCard(
+                onClick = { component.onClickAddToFavorite() }
+            )
         }
     }
 }
@@ -82,7 +88,8 @@ fun FavoriteContent(component: FavoriteComponent) {
 @Composable
 private fun CityCard(
     cityItem: FavoriteStore.State.CityItem,
-    index: Int
+    index: Int,
+    onClick: () -> Unit
 ) {
     val gradient = getGradientByIndex(index)
     Card(
@@ -113,6 +120,7 @@ private fun CityCard(
                         radius = size.maxDimension / 2
                     )
                 }
+                .clickable { onClick() }
                 .padding(24.dp),
         ) {
             when (val weatherState = cityItem.weatherState) {
@@ -156,7 +164,9 @@ private fun CityCard(
 }
 
 @Composable
-private fun AddFavoriteCityCard() {
+private fun AddFavoriteCityCard(
+    onClick: () -> Unit
+) {
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         shape = MaterialTheme.shapes.extraLarge,
@@ -166,6 +176,7 @@ private fun AddFavoriteCityCard() {
             modifier = Modifier
                 .sizeIn(minHeight = 196.dp)
                 .fillMaxWidth()
+                .clickable { onClick() }
                 .padding(24.dp)
         ) {
             Icon(
@@ -190,7 +201,9 @@ private fun AddFavoriteCityCard() {
 
 @Preview
 @Composable
-private fun SearchCard() {
+private fun SearchCard(
+    onClick: () -> Unit = {}
+) {
     val gradient = CardGradients.gradients[3]
     Card(
         shape = CircleShape
@@ -198,6 +211,7 @@ private fun SearchCard() {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
+                .clickable { onClick() }
                 .fillMaxWidth()
                 .background(gradient.primaryGradient)
         ) {
