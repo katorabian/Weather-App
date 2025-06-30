@@ -1,5 +1,10 @@
 package com.katorabian.weatherapp.presentation.screen.details
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,10 +35,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -169,8 +176,27 @@ private fun Forecast(forecast: Forecast) {
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.weight(1F))
-        UpcomingWeather(upcoming = forecast.upcoming)
+        AnimatedUpcomingWeather(upcoming = forecast.upcoming)
         Spacer(modifier = Modifier.weight(0.5F))
+    }
+}
+
+@Composable
+private fun AnimatedUpcomingWeather(upcoming: List<Weather>) {
+    val state = remember {
+        MutableTransitionState(false).apply {
+            targetState = true
+        }
+    }
+    AnimatedVisibility(
+        visibleState = state,
+        enter = fadeIn(animationSpec = tween(500)) +
+                slideIn(
+                    animationSpec = tween(500),
+                    initialOffset = { IntOffset(0, it.height) }
+                )
+    ) {
+        UpcomingWeather(upcoming = upcoming)
     }
 }
 
