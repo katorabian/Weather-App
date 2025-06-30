@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,10 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,6 +37,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -55,6 +60,9 @@ fun FavoriteContent(component: FavoriteComponent) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        item(span = { GridItemSpan(2) }) {
+            SearchCard()
+        }
         itemsIndexed(
             items = state.cityItems,
             key = { _, item -> item.city.id }
@@ -175,6 +183,34 @@ private fun AddFavoriteCityCard() {
                 text = stringResource(R.string.button_add_favorite),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun SearchCard() {
+    val gradient = CardGradients.gradients[3]
+    Card(
+        shape = CircleShape
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(gradient.primaryGradient)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Search,
+                tint = MaterialTheme.colorScheme.background,
+                contentDescription = null,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+            Text(
+                text = stringResource(R.string.search),
+                color = MaterialTheme.colorScheme.background,
+                modifier = Modifier.padding(end = 16.dp)
             )
         }
     }
