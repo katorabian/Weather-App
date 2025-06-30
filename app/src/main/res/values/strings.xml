@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Weather App</string>
+    <string name="button_add_favorite">Add favorite</string>
 </resources>

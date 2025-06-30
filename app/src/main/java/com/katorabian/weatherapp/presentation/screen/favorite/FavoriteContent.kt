@@ -1,19 +1,26 @@
 package com.katorabian.weatherapp.presentation.screen.favorite
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,13 +32,16 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.katorabian.weatherapp.R
 import com.katorabian.weatherapp.presentation.extensions.tempToFormatString
 import com.katorabian.weatherapp.presentation.ui.theme.CardGradients
 import com.katorabian.weatherapp.presentation.ui.theme.Gradient
+import com.katorabian.weatherapp.presentation.ui.theme.Orange
 
 @Composable
 fun FavoriteContent(component: FavoriteComponent) {
@@ -53,6 +63,9 @@ fun FavoriteContent(component: FavoriteComponent) {
                 cityItem = item,
                 index = index
             )
+        }
+        item {
+            AddFavoriteCityCard()
         }
     }
 }
@@ -129,6 +142,39 @@ private fun CityCard(
                 text = cityItem.city.name,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.background
+            )
+        }
+    }
+}
+
+@Composable
+private fun AddFavoriteCityCard() {
+    Card(
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        shape = MaterialTheme.shapes.extraLarge,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
+    ) {
+        Column(
+            modifier = Modifier
+                .sizeIn(minHeight = 196.dp)
+                .fillMaxWidth()
+                .padding(24.dp)
+        ) {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(16.dp)
+                    .size(48.dp),
+                imageVector = Icons.Default.Edit,
+                tint = Orange,
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.weight(1F))
+            Text(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = stringResource(R.string.button_add_favorite),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
     }
