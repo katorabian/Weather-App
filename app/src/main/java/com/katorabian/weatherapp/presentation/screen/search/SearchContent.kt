@@ -26,10 +26,14 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.katorabian.weatherapp.R
@@ -39,11 +43,17 @@ import com.katorabian.weatherapp.domain.entity.City
 @Composable
 fun SearchContent(component: SearchComponent) {
     val state by component.model.collectAsState()
+    val focusRequester = remember {
+        FocusRequester()
+    }
+    LaunchedEffect(key1 = Unit) {
+        focusRequester.requestFocus()
+    }
 
     SearchBar(
         modifier = Modifier
             .fillMaxWidth()
-            .defaultMinSize(minHeight = 40.dp),
+            .focusRequester(focusRequester),
         inputField = {
             SearchBarDefaults.InputField(
                 query = state.searchQuery,
