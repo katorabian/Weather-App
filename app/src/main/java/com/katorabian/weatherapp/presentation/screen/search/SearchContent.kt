@@ -57,6 +57,7 @@ fun SearchContent(component: SearchComponent) {
         inputField = {
             SearchBarDefaults.InputField(
                 query = state.searchQuery,
+                placeholder = { Text(text = stringResource(R.string.search))},
                 onQueryChange = { component.changeSearchQuery(it) },
                 onSearch = { component.onClickSearch() },
                 expanded = true,
