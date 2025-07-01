@@ -30,9 +30,7 @@ interface DataModule {
     companion object {
 
         @[ApplicationScope Provides]
-        fun provideApiService(context: Context): ApiService {
-            return ApiFactory(context).apiService
-        }
+        fun provideApiService(): ApiService = ApiFactory.apiService
 
         @[ApplicationScope Provides]
         fun provideFavoriteDatabase(context: Context): FavoriteDataBase {
