@@ -1,17 +1,22 @@
 package com.katorabian.weatherapp.presentation.screen.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.katorabian.weatherapp.R
+import com.katorabian.weatherapp.domain.entity.City
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -100,10 +106,37 @@ fun SearchContent(component: SearchComponent) {
                     contentPadding = PaddingValues(16.dp)
                 ) {
                     items(items = searchState.cities, key = { it.id }) {
-                        Text(text = it.name)
+                        CityCard(
+                            city = it,
+                            onCityClick = component::onClickCity
+                        )
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun CityCard(
+    city: City,
+    onCityClick: (City) -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onCityClick(city) }
+                .padding(vertical = 8.dp, horizontal = 16.dp)
+        ) {
+            Text(
+                text = city.name,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = city.country)
         }
     }
 }
