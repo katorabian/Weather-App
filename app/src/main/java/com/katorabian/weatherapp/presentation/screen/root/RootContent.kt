@@ -1,6 +1,7 @@
 package com.katorabian.weatherapp.presentation.screen.root
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.katorabian.weatherapp.presentation.screen.details.DetailsContent
 import com.katorabian.weatherapp.presentation.screen.favorite.FavoriteContent
@@ -8,10 +9,14 @@ import com.katorabian.weatherapp.presentation.screen.search.SearchContent
 import com.katorabian.weatherapp.presentation.ui.theme.WeatherAppTheme
 
 @Composable
-fun RootContent(component: RootComponent) {
+fun RootContent(
+    modifier: Modifier = Modifier,
+    component: RootComponent
+) {
 
     WeatherAppTheme {
         Children(
+            modifier = modifier,
             stack = component.stack
         ) {
             when (val instance: RootComponent.Child = it.instance) {
